@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using System.IO.Abstractions;
-
+using System.Diagnostics;
 using Microsoft.VisualBasic.FileIO;
 using System.Threading;
 
@@ -35,6 +35,7 @@ namespace FileOperations
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            StopApplication("Notepad");
             lbl1.Content = "Doing the backup";
             await Task.Delay(100); // Allow UI to update
 
@@ -121,7 +122,26 @@ namespace FileOperations
 
         public void StopApplication(string AppName)
         {
-
+            Process[] processes = Process.GetProcessesByName(AppName);
+            if(processes.Length>0)
+            {
+                foreach(Process process in processes)
+                {
+                    try
+                    {
+                        process.CloseMainWindow();
+                        if(!process.WaitForExit(5000))
+                        {
+                            process.Kill();
+                        }
+                        
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("Failed to Stop process", ex.Message);
+                    }
+                }
+            }
         }
 
 
