@@ -28,6 +28,7 @@ namespace FileOperations
         public MainWindow()
         {
             InitializeComponent();
+            GetAllProcess();
         }
        
         string Sourcepath = @"D:\MCES2\Applications";
@@ -35,17 +36,19 @@ namespace FileOperations
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            StopApplication("Notepad");
+            //StopApplication("MCES2*");
             lbl1.Content = "Doing the backup";
             await Task.Delay(100); // Allow UI to update
 
             bool success = false;
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
-                    CopyDirectory(Sourcepath, Destination);
+                    await Task.Run(() => { CopyDirectory(Sourcepath, Destination); });
+                    await Task.Run(() => { DeleteFiles(Sourcepath); });
+                   
                     success = true;
                 }
                 catch (Exception ex)
@@ -59,7 +62,7 @@ namespace FileOperations
 
             if (success && Directory.Exists(Destination))
             {
-                DeleteFiles(Sourcepath);
+               
                 lbl1.Content = "Done Backup";
 
 
@@ -106,10 +109,21 @@ namespace FileOperations
         {
             foreach(string filepath in Directory.GetDirectories(path))
             {
-                foreach(string subfile in Directory.GetFiles(filepath))
-                {
-                    File.Delete(subfile);
-                }
+                
+                    try
+                    {
+                        foreach (string subfile in Directory.GetFiles(filepath))
+                        {
+                            File.Delete(subfile);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine($"failed with Exception {ex.Message}");
+                    }
+                   
+              
+                
                 Directory.Delete(filepath);
             }
 
@@ -119,21 +133,19 @@ namespace FileOperations
                 File.Delete(file);
             }
         }
-
-        public void StopApplication(string AppName)
+        //pdf24
+        public void GetAllProcess()
         {
-            Process[] processes = Process.GetProcessesByName(AppName);
+            Process[] processes = Process.GetProcesses();
             if(processes.Length>0)
             {
                 foreach(Process process in processes)
                 {
                     try
                     {
-                        process.CloseMainWindow();
-                        if(!process.WaitForExit(5000))
-                        {
-                            process.Kill();
-                        }
+                        Process_List.Items.Add(process.ProcessName);
+                       
+                        
                         
                     }
                     catch(Exception ex)
@@ -144,6 +156,42 @@ namespace FileOperations
             }
         }
 
+        private void StopApp(object sender, RoutedEventArgs e)
+        {
+            
+          
+                if (Process_List.SelectedValue != null)
+                {
+                    foreach (Process p in Process.GetProcesses())
+                    {
+                        if (p.ProcessName == (string)Process_List.SelectedValue)
+                        {
+                            p.Kill();
+                            
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No Process Selected");
+                }
+            
+            
+        }
 
+        private void Refresh(object sender, RoutedEventArgs e)
+        {
+            Process_List.Items.Clear();
+               Process[] refProcess = Process.GetProcesses();  
+            if(refProcess.Length>0)
+            {
+                foreach (var item in refProcess)
+                {
+                    Process_List.Items.Add(item.ProcessName);
+                }
+            }
+
+            
+        }
     }
 }

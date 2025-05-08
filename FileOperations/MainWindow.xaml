@@ -7,12 +7,57 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Label Name="lbl1" Grid.Row="0" Content="Backup not Started" HorizontalAlignment="Center" VerticalAlignment="Center" Width="250" Height="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="25"/>
-        <Button Grid.Row="1" Height="50" Width="250" Content="Generate Operation" FontSize="25" Click="Button_Click"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Name="lbl1" Grid.Row="0" Content="Backup not Started" HorizontalAlignment="Center" VerticalAlignment="Center" Width="250" Height="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="25"/>
+            <Button Height="50" Width="250" Grid.Row="1" Content="Generate Operation" FontSize="25" Click="Button_Click" >
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFECEFEF" Offset="1"/>
+                        <GradientStop Color="#FF89A4A2" Offset="0"/>
+                        <GradientStop Color="#FF079494" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <ListBox Name="Process_List" Width="250" Height="400" BorderThickness="2"/>
+            <Button Content="X" Width="50" Height="50" Margin="0,0,-330,0" Click="StopApp" BorderBrush="#FF0A0A0A" Foreground="Black" >
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFECEFEF" Offset="1"/>
+                        <GradientStop Color="#FF89A4A2" Offset="0"/>
+                        <GradientStop Color="#FF079494" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button Content="Refresh" Width="50" Height="50" Margin="0,0,330,0" Click="Refresh" Foreground="Black"  >
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFECEFEF" Offset="1"/>
+                        <GradientStop Color="#FF89A4A2" Offset="0"/>
+                        <GradientStop Color="#FF079494" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+                <Button.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FF840101" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.BorderBrush>
+            </Button>
+        </Grid>
+
+
 
     </Grid>
 </Window>
